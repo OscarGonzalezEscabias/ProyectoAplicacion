@@ -34,13 +34,27 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
-
-        POJOAdapter = POJOAdapter(POJOS) { item ->
-            deleteItem(item)
-        }
+        POJOAdapter = POJOAdapter(POJOS, { item -> deleteItem(item) }, { item ->
+            val dialog = POJODialogFragment(item) { updatedPojo ->
+                val position = POJOS.indexOf(item)
+                if (position != -1) {
+                    POJOS[position] = updatedPojo
+                    POJOAdapter.notifyItemChanged(position)
+                }
+            }
+            dialog.show(supportFragmentManager, "EditDialog")
+        })
 
         bindingMain.recyclerView.layoutManager = LinearLayoutManager(this)
         bindingMain.recyclerView.adapter = POJOAdapter
+
+        bindingMain.addButton.setOnClickListener {
+            val dialog = POJODialogFragment(null) { newPojo ->
+                POJOS.add(newPojo)
+                POJOAdapter.notifyItemInserted(POJOS.size - 1)
+            }
+            dialog.show(supportFragmentManager, "AddDialog")
+        }
     }
 
     private fun deleteItem(POJO: POJO) {

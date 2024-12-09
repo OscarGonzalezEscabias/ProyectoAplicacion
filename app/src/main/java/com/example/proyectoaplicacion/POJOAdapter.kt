@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 class POJOAdapter(
     private val POJOS: MutableList<POJO>,
-    private val onDeleteClick: (POJO) -> Unit
+    private val onDeleteClick: (POJO) -> Unit,
+    private val onEditClick: (POJO) -> Unit
 ) : RecyclerView.Adapter<POJOAdapter.ItemViewHolder>() {
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -18,6 +19,7 @@ class POJOAdapter(
         val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
         val descriptionTextView: TextView = itemView.findViewById(R.id.descriptionTextView)
         val deleteButton: Button = itemView.findViewById(R.id.deleteButton)
+        val editButton: Button = itemView.findViewById(R.id.editButton) // Añadimos referencia al botón Editar
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -33,6 +35,10 @@ class POJOAdapter(
 
         holder.deleteButton.setOnClickListener {
             onDeleteClick(item)
+        }
+
+        holder.editButton.setOnClickListener {
+            onEditClick(item)
         }
     }
 
