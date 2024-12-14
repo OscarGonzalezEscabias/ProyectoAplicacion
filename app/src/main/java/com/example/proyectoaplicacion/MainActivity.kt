@@ -1,10 +1,13 @@
 package com.example.proyectoaplicacion
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.proyectoaplicacion.databinding.ActivityMainBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,6 +22,11 @@ class MainActivity : AppCompatActivity() {
         bindingMain = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bindingMain.root)
 
+        initEvent();
+
+    }
+
+    private fun initEvent() {
         POJOS.addAll(
             listOf(
                 POJO(R.drawable.imagen1, "Xpecado", "Una franquicia de hamburgueserias al estilo smash burguer popular en Estados Unidos."),
@@ -54,6 +62,19 @@ class MainActivity : AppCompatActivity() {
                 POJOAdapter.notifyItemInserted(POJOS.size - 1)
             }
             dialog.show(supportFragmentManager, "AddDialog")
+        }
+
+        bindingMain.logoutButton.setOnClickListener {
+            val sharedPref = getSharedPreferences("appPrefs", Context.MODE_PRIVATE)
+            val editor = sharedPref.edit()
+            editor.remove("acceso")
+            editor.apply()
+
+            FirebaseAuth.getInstance().signOut()
+
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 

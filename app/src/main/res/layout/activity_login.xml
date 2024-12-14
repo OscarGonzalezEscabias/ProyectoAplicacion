@@ -63,6 +63,16 @@
         android:padding="5dp"
         app:backgroundTint="#FFFFFF"
         android:background="@drawable/outline_button" />
+
+    <Button
+        android:id="@+id/recoverPasswordButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Olvide mi contraseña"
+        android:textColor="#0000FF"
+        android:padding="5dp"
+        app:backgroundTint="#FFFFFF"
+        android:background="@drawable/outline_button" />
 </LinearLayout>
 
 
