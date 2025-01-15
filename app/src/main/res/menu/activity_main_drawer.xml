@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/recyclerViewFragment"
+        android:title="Home" />
+    <item android:id="@+id/settingsFragment"
+        android:title="Configuración" />
+    <item android:id="@+id/aboutFragment"
+        android:title="Acerca de" />
+    <item android:id="@+id/logout"
+        android:title="Cerrar sesión" />
+</menu>
