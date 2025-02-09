@@ -1,4 +1,4 @@
-package com.example.proyectoaplicacion
+package com.example.proyectoaplicacion.domain.model
 
 data class POJO(
     val imageResId: Int,

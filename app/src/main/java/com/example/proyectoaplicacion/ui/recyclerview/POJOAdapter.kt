@@ -1,4 +1,4 @@
-package com.example.proyectoaplicacion
+package com.example.proyectoaplicacion.ui.recyclerview
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,19 +7,22 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.proyectoaplicacion.R
+import com.example.proyectoaplicacion.domain.model.POJO
 
 class POJOAdapter(
-    private val POJOS: MutableList<POJO>,
     private val onDeleteClick: (POJO) -> Unit,
     private val onEditClick: (POJO) -> Unit
 ) : RecyclerView.Adapter<POJOAdapter.ItemViewHolder>() {
+
+    private val pojos = mutableListOf<POJO>()
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.itemImageView)
         val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
         val descriptionTextView: TextView = itemView.findViewById(R.id.descriptionTextView)
         val deleteButton: Button = itemView.findViewById(R.id.deleteButton)
-        val editButton: Button = itemView.findViewById(R.id.editButton) // Añadimos referencia al botón Editar
+        val editButton: Button = itemView.findViewById(R.id.editButton)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -28,19 +31,20 @@ class POJOAdapter(
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val item = POJOS[position]
-        holder.imageView.setImageResource(item.imageResId)
-        holder.titleTextView.text = item.title
-        holder.descriptionTextView.text = item.description
+        val pojo = pojos[position]
+        holder.imageView.setImageResource(pojo.imageResId)
+        holder.titleTextView.text = pojo.title
+        holder.descriptionTextView.text = pojo.description
 
-        holder.deleteButton.setOnClickListener {
-            onDeleteClick(item)
-        }
-
-        holder.editButton.setOnClickListener {
-            onEditClick(item)
-        }
+        holder.deleteButton.setOnClickListener { onDeleteClick(pojo) }
+        holder.editButton.setOnClickListener { onEditClick(pojo) }
     }
 
-    override fun getItemCount(): Int = POJOS.size
+    override fun getItemCount(): Int = pojos.size
+
+    fun updatePOJOs(newPOJOs: List<POJO>) {
+        pojos.clear()
+        pojos.addAll(newPOJOs)
+        notifyDataSetChanged()
+    }
 }

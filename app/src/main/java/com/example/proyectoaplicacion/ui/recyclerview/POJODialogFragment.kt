@@ -1,4 +1,4 @@
-package com.example.proyectoaplicacion
+package com.example.proyectoaplicacion.ui.recyclerview
 
 import android.app.Activity
 import android.content.Intent
@@ -8,8 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.DialogFragment
+import com.example.proyectoaplicacion.R
 import com.example.proyectoaplicacion.databinding.FragmentPojoDialogBinding
+import com.example.proyectoaplicacion.domain.model.POJO
 
 class POJODialogFragment(
     private val pojo: POJO?,
@@ -19,6 +22,13 @@ class POJODialogFragment(
     private var _binding: FragmentPojoDialogBinding? = null
     private val binding get() = _binding!!
     private var selectedImageUri: Uri? = null
+
+    private val imagePickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            selectedImageUri = result.data?.data
+            binding.imageView.setImageURI(selectedImageUri)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,24 +81,11 @@ class POJODialogFragment(
         val intent = Intent(Intent.ACTION_PICK).apply {
             type = "image/*"
         }
-        startActivityForResult(intent, IMAGE_PICK_CODE)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == IMAGE_PICK_CODE && resultCode == Activity.RESULT_OK) {
-            selectedImageUri = data?.data
-            binding.imageView.setImageURI(selectedImageUri)
-        }
+        imagePickerLauncher.launch(intent)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-    companion object {
-        private const val IMAGE_PICK_CODE = 1001
-    }
 }
-
