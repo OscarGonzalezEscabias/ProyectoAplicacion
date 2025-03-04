@@ -22,12 +22,12 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.example.proyectoaplicacion.R
 import com.example.proyectoaplicacion.databinding.FragmentPojoDialogBinding
-import com.example.proyectoaplicacion.domain.model.POJO
+import com.example.proyectoaplicacion.domain.model.Review
 import java.io.ByteArrayOutputStream
 
 class POJODialogFragment(
-    private val pojo: POJO?,
-    private val onSave: (POJO) -> Unit
+    private val review: Review?,
+    private val onSave: (Review) -> Unit
 ) : DialogFragment() {
 
     private var _binding: FragmentPojoDialogBinding? = null
@@ -48,10 +48,10 @@ class POJODialogFragment(
     }
 
     private fun initUI() {
-        pojo?.let {
+        review?.let {
             binding.titleEditText.setText(it.title)
             binding.descriptionEditText.setText(it.description)
-            binding.imageView.setImageResource(it.imageResId)
+            binding.imageView.setImageResource(it.id)
         }
 
         binding.selectImageButton.setOnClickListener {
@@ -77,14 +77,14 @@ class POJODialogFragment(
                     }
                 }
 
-                val newPOJO = pojo?.copy(
+                val newReview = review?.copy(
                     title = title,
                     description = description,
-                    imageResId = selectedImageUri?.let { R.drawable.custom_placeholder } ?: pojo.imageResId,
-                    imageBase64 = imageBase64
-                ) ?: POJO(R.drawable.imagen_placeholder, title, description, imageBase64)
+                    id = selectedImageUri?.let { R.drawable.custom_placeholder } ?: review.id,
+                    image = imageBase64
+                ) ?: Review(R.drawable.imagen_placeholder, title, description, imageBase64)
 
-                onSave(newPOJO)
+                onSave(newReview)
                 dismiss()
             } else {
                 Toast.makeText(requireContext(), "Por favor, llena todos los campos", Toast.LENGTH_SHORT).show()

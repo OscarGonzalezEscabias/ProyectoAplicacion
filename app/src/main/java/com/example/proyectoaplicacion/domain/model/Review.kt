@@ -1,8 +1,8 @@
 package com.example.proyectoaplicacion.domain.model
 
-data class POJO(
-    val imageResId: Int,
+data class Review(
+    val id: Int,
     val title: String,
     val description: String,
-    val imageBase64: String? = null
+    val image: String? = null
 )

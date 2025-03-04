@@ -2,10 +2,10 @@ package com.example.proyectoaplicacion.application
 
 import android.content.Context
 import com.example.proyectoaplicacion.data.local.SharedPreferencesHelper
-import com.example.proyectoaplicacion.data.remote.FirebaseDataSource
-import com.example.proyectoaplicacion.data.repository.POJORepositoryImpl
+import com.example.proyectoaplicacion.data.remote.RetrofitClient
+import com.example.proyectoaplicacion.data.repository.ReviewRepositoryImpl
 import com.example.proyectoaplicacion.data.repository.UserRepositoryImpl
-import com.example.proyectoaplicacion.domain.repository.POJORepository
+import com.example.proyectoaplicacion.domain.repository.ReviewRepository
 import com.example.proyectoaplicacion.domain.repository.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -20,21 +20,27 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseDataSource(): FirebaseDataSource = FirebaseDataSource()
-
-    @Provides
-    @Singleton
     fun provideSharedPreferencesHelper(@ApplicationContext context: Context): SharedPreferencesHelper =
         SharedPreferencesHelper(context)
 
     @Provides
     @Singleton
-    fun provideUserRepository(
-        firebaseDataSource: FirebaseDataSource,
-        sharedPreferencesHelper: SharedPreferencesHelper
-    ): UserRepository = UserRepositoryImpl(firebaseDataSource, sharedPreferencesHelper)
+    fun provideRetrofitClient(sharedPreferencesHelper: SharedPreferencesHelper): RetrofitClient {
+        return RetrofitClient(sharedPreferencesHelper)
+    }
 
     @Provides
     @Singleton
-    fun providePOJORepository(): POJORepository = POJORepositoryImpl()
+    fun provideUserRepository(
+        retrofitClient: RetrofitClient,
+        sharedPreferencesHelper: SharedPreferencesHelper
+    ): UserRepository {
+        return UserRepositoryImpl(retrofitClient, sharedPreferencesHelper)
+    }
+
+    @Provides
+    @Singleton
+    fun provideReviewRepository(retrofitClient: RetrofitClient): ReviewRepository {
+        return ReviewRepositoryImpl(retrofitClient)
+    }
 }

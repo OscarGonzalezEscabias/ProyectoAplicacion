@@ -3,12 +3,14 @@ package com.example.proyectoaplicacion.ui.recyclerview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.proyectoaplicacion.domain.model.POJO
+import androidx.lifecycle.viewModelScope
+import com.example.proyectoaplicacion.domain.model.Review
 import com.example.proyectoaplicacion.domain.usecase.AddPOJOUseCase
 import com.example.proyectoaplicacion.domain.usecase.DeletePOJOUseCase
 import com.example.proyectoaplicacion.domain.usecase.EditPOJOUseCase
 import com.example.proyectoaplicacion.domain.usecase.GetPOJOsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,29 +21,37 @@ class RecyclerViewModel @Inject constructor(
     private val editPOJOUseCase: EditPOJOUseCase
 ) : ViewModel() {
 
-    private val _pojos = MutableLiveData<List<POJO>>()
-    val pojos: LiveData<List<POJO>> get() = _pojos
+    private val _reviews = MutableLiveData<List<Review>>()
+    val reviews: LiveData<List<Review>> get() = _reviews
 
     init {
-        loadPOJOs()
+        loadReviews()
     }
 
-    private fun loadPOJOs() {
-        _pojos.value = getPOJOsUseCase.execute()
+    private fun loadReviews() {
+        viewModelScope.launch {
+            _reviews.value = getPOJOsUseCase.execute()
+        }
     }
 
-    fun addPOJO(pojo: POJO) {
-        addPOJOUseCase.execute(pojo)
-        loadPOJOs()
+    fun addReview(review: Review) {
+        viewModelScope.launch {
+            addPOJOUseCase.execute(review)
+            loadReviews()
+        }
     }
 
-    fun deletePOJO(pojo: POJO) {
-        deletePOJOUseCase.execute(pojo)
-        loadPOJOs()
+    fun editReview(id: Int, review: Review) {
+        viewModelScope.launch {
+            editPOJOUseCase.execute(id, review)
+            loadReviews()
+        }
     }
 
-    fun editPOJO(pojo: POJO) {
-        editPOJOUseCase.execute(pojo)
-        loadPOJOs()
+    fun deleteReview(id: Int) {
+        viewModelScope.launch {
+            deletePOJOUseCase.execute(id)
+            loadReviews()
+        }
     }
 }

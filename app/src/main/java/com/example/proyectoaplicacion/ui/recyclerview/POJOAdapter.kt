@@ -10,14 +10,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyectoaplicacion.R
-import com.example.proyectoaplicacion.domain.model.POJO
+import com.example.proyectoaplicacion.domain.model.Review
 
 class POJOAdapter(
-    private val onDeleteClick: (POJO) -> Unit,
-    private val onEditClick: (POJO) -> Unit
+    private val onDeleteClick: (Review) -> Unit,
+    private val onEditClick: (Review) -> Unit
 ) : RecyclerView.Adapter<POJOAdapter.POJOViewHolder>() {
 
-    private var pojos: List<POJO> = emptyList()
+    private var reviews: List<Review> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): POJOViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_layout, parent, false)
@@ -25,14 +25,14 @@ class POJOAdapter(
     }
 
     override fun onBindViewHolder(holder: POJOViewHolder, position: Int) {
-        val pojo = pojos[position]
+        val pojo = reviews[position]
         holder.bind(pojo)
     }
 
-    override fun getItemCount(): Int = pojos.size
+    override fun getItemCount(): Int = reviews.size
 
-    fun updatePOJOs(newPOJOs: List<POJO>) {
-        pojos = newPOJOs
+    fun updatePOJOs(newReviews: List<Review>) {
+        reviews = newReviews
         notifyDataSetChanged()
     }
 
@@ -43,24 +43,24 @@ class POJOAdapter(
         private val deleteButton: Button = itemView.findViewById(R.id.deleteButton)
         private val editButton: Button = itemView.findViewById(R.id.editButton)
 
-        fun bind(pojo: POJO) {
-            titleTextView.text = pojo.title
-            descriptionTextView.text = pojo.description
+        fun bind(review: Review) {
+            titleTextView.text = review.title
+            descriptionTextView.text = review.description
 
-            if (pojo.imageBase64 != null) {
-                val imageBytes = Base64.decode(pojo.imageBase64, Base64.DEFAULT)
+            if (review.image != null) {
+                val imageBytes = Base64.decode(review.image, Base64.DEFAULT)
                 val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
                 imageView.setImageBitmap(bitmap)
             } else {
-                imageView.setImageResource(pojo.imageResId)
+                imageView.setImageResource(review.id)
             }
 
             deleteButton.setOnClickListener {
-                onDeleteClick(pojo)
+                onDeleteClick(review)
             }
 
             editButton.setOnClickListener {
-                onEditClick(pojo)
+                onEditClick(review)
             }
         }
     }

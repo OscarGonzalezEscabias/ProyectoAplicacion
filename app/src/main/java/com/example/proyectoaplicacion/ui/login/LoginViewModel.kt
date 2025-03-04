@@ -3,18 +3,14 @@ package com.example.proyectoaplicacion.ui.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.proyectoaplicacion.data.local.SharedPreferencesHelper
-import com.example.proyectoaplicacion.data.remote.FirebaseDataSource
+import androidx.lifecycle.viewModelScope
 import com.example.proyectoaplicacion.domain.repository.UserRepository
-import com.example.proyectoaplicacion.domain.usecase.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginUseCase: LoginUseCase,
-    private val firebaseDataSource: FirebaseDataSource,
-    private val sharedPreferencesHelper: SharedPreferencesHelper,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
@@ -25,35 +21,28 @@ class LoginViewModel @Inject constructor(
     val errorMessage: LiveData<String> get() = _errorMessage
 
     fun login(username: String, password: String) {
-        val email = sharedPreferencesHelper.getEmailByUsername(username)
-        if (email == null) {
-            _errorMessage.value = "Nombre de usuario no encontrado"
-        } else {
-            loginUseCase.execute(email, password) { success, error ->
-                if (success) {
-                    _navigateToMain.value = true
-                } else {
-                    _errorMessage.value = error
-                }
+        viewModelScope.launch {
+            val token = userRepository.login(username, password)
+            if (token != null) {
+                _navigateToMain.value = true
+            } else {
+                _errorMessage.value = "Error en el inicio de sesión"
             }
         }
+    }
+
+    fun isUserLoggedIn(): Boolean {
+        return userRepository.isUserLoggedIn()
     }
 
     fun recoverPassword(username: String) {
-        val email = sharedPreferencesHelper.getEmailByUsername(username)
-        if (email == null) {
-            _errorMessage.value = "Nombre de usuario no encontrado"
-        } else {
-            firebaseDataSource.sendPasswordResetEmail(email) { success, error ->
-                if (success) {
-                    _errorMessage.value = "Correo de recuperación enviado"
-                } else {
-                    _errorMessage.value = error
-                }
+        viewModelScope.launch {
+            val email = userRepository.getCurrentUserEmail()
+            if (email != null) {
+                _errorMessage.value = "Correo de recuperación enviado a $email"
+            } else {
+                _errorMessage.value = "Nombre de usuario no encontrado"
             }
         }
     }
-
-    fun isUserLoggedIn(): Boolean = userRepository.isUserLoggedIn()
-
 }

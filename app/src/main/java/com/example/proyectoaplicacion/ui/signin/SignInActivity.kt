@@ -33,7 +33,7 @@ class SignInActivity : AppCompatActivity() {
             } else if (username.isEmpty()) {
                 Toast.makeText(this, "Por favor, introduce un nombre de usuario", Toast.LENGTH_SHORT).show()
             } else {
-                viewModel.signUp(email, password, username)
+                viewModel.signUp(username, email, password) // Cambia el orden de los parámetros
             }
         }
 

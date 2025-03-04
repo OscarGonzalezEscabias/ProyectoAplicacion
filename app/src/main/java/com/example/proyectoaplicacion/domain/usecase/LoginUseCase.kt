@@ -4,7 +4,7 @@ import com.example.proyectoaplicacion.domain.repository.UserRepository
 import javax.inject.Inject
 
 class LoginUseCase @Inject constructor(private val userRepository: UserRepository) {
-    fun execute(email: String, password: String, onComplete: (Boolean, String?) -> Unit) {
-        userRepository.login(email, password, onComplete)
+    suspend fun execute(usernameOrEmail: String, password: String): String? {
+        return userRepository.login(usernameOrEmail, password)
     }
 }

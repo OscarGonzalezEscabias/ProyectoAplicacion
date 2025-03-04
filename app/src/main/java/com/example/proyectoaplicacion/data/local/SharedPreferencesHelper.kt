@@ -13,17 +13,25 @@ class SharedPreferencesHelper @Inject constructor(context: Context) {
             putString("userEmail", email)
             putString("userName", username)
             putString("acceso", access)
-            putString("username_$username", email)
             apply()
         }
+    }
+
+    fun saveAccessToken(token: String) {
+        sharedPref.edit().putString("accessToken", token).apply()
+    }
+
+    fun getAccessToken(): String? {
+        return sharedPref.getString("accessToken", null)
+    }
+
+    fun clearAccessToken() {
+        sharedPref.edit().remove("accessToken").apply()
     }
 
     fun getUserEmail(): String? = sharedPref.getString("userEmail", null)
     fun getUserName(): String? = sharedPref.getString("userName", null)
     fun getAccess(): String? = sharedPref.getString("acceso", null)
-    fun getEmailByUsername(username: String): String? {
-        return sharedPref.getString("username_$username", null)
-    }
     fun clearAccess() {
         sharedPref.edit().remove("acceso").apply()
     }

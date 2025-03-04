@@ -1,11 +1,11 @@
 package com.example.proyectoaplicacion.domain.usecase
 
-import com.example.proyectoaplicacion.domain.model.POJO
-import com.example.proyectoaplicacion.domain.repository.POJORepository
+import com.example.proyectoaplicacion.domain.model.Review
+import com.example.proyectoaplicacion.domain.repository.ReviewRepository
 import javax.inject.Inject
 
-class AddPOJOUseCase @Inject constructor(private val pojoRepository: POJORepository) {
-    fun execute(pojo: POJO) {
-        pojoRepository.addPOJO(pojo)
+class AddPOJOUseCase @Inject constructor(private val reviewRepository: ReviewRepository) {
+    suspend fun execute(review: Review): Boolean {
+        return reviewRepository.addReview(review)
     }
 }

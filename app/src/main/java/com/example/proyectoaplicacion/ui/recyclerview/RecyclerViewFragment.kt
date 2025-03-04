@@ -34,11 +34,11 @@ class RecyclerViewFragment : Fragment() {
     private fun setupRecyclerView() {
         adapter = POJOAdapter(
             onDeleteClick = { pojo ->
-                viewModel.deletePOJO(pojo)
+                viewModel.deleteReview(pojo.id)
             },
             onEditClick = { pojo ->
                 val dialog = POJODialogFragment(pojo) { updatedPojo ->
-                    viewModel.editPOJO(updatedPojo)
+                    viewModel.editReview(updatedPojo.id, updatedPojo)
                 }
                 dialog.show(parentFragmentManager, "EditDialog")
             }
@@ -48,15 +48,15 @@ class RecyclerViewFragment : Fragment() {
 
         binding.addButton.setOnClickListener {
             val dialog = POJODialogFragment(null) { newPojo ->
-                viewModel.addPOJO(newPojo)
+                viewModel.addReview(newPojo)
             }
             dialog.show(parentFragmentManager, "AddDialog")
         }
     }
 
     private fun observePOJOs() {
-        viewModel.pojos.observe(viewLifecycleOwner) { pojos ->
-            adapter.updatePOJOs(pojos)
+        viewModel.reviews.observe(viewLifecycleOwner) { reviews ->
+            adapter.updatePOJOs(reviews)
         }
     }
 }

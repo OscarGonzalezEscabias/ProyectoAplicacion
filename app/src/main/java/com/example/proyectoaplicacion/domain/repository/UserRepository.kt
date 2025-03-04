@@ -1,8 +1,8 @@
 package com.example.proyectoaplicacion.domain.repository
 
 interface UserRepository {
-    fun login(email: String, password: String, onComplete: (Boolean, String?) -> Unit)
-    fun signUp(email: String, password: String, onComplete: (Boolean, String?) -> Unit)
+    suspend fun login(usernameOrEmail: String, password: String): String?
+    suspend fun register(username: String, email: String, password: String): Boolean
     fun saveUser(email: String, username: String)
     fun getCurrentUserEmail(): String?
     fun getCurrentUserName(): String?
