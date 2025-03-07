@@ -48,11 +48,15 @@ class POJOAdapter(
             descriptionTextView.text = review.description
 
             if (review.image != null) {
-                val imageBytes = Base64.decode(review.image, Base64.DEFAULT)
-                val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-                imageView.setImageBitmap(bitmap)
+                val imageName = review.image.replace(".jpg", "") // Elimina la extensión .jpg
+                val imageResId = itemView.context.resources.getIdentifier(imageName, "drawable", itemView.context.packageName)
+                if (imageResId != 0) {
+                    imageView.setImageResource(imageResId)
+                } else {
+                    imageView.setImageResource(R.drawable.imagen_placeholder)
+                }
             } else {
-                imageView.setImageResource(review.id)
+                imageView.setImageResource(R.drawable.imagen_placeholder)
             }
 
             deleteButton.setOnClickListener {

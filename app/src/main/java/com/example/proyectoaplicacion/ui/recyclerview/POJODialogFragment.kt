@@ -7,6 +7,7 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -51,7 +52,16 @@ class POJODialogFragment(
         review?.let {
             binding.titleEditText.setText(it.title)
             binding.descriptionEditText.setText(it.description)
-            binding.imageView.setImageResource(it.id)
+            binding.imageView.setImageResource(R.drawable.imagen_placeholder)
+            if (it.image != null) {
+                val imageName = it.image.replace(".jpg", "")
+                val imageResId = binding.imageView.context.resources.getIdentifier(imageName, "drawable", binding.imageView.context.packageName)
+                if (imageResId != 0) {
+                    binding.imageView.setImageResource(imageResId)
+                } else {
+                    binding.imageView.setImageResource(R.drawable.imagen_placeholder)
+                }
+            }
         }
 
         binding.selectImageButton.setOnClickListener {
@@ -75,14 +85,13 @@ class POJODialogFragment(
                         e.printStackTrace()
                         null
                     }
-                }
+                } ?: review?.image
 
                 val newReview = review?.copy(
                     title = title,
                     description = description,
-                    id = selectedImageUri?.let { R.drawable.custom_placeholder } ?: review.id,
                     image = imageBase64
-                ) ?: Review(R.drawable.imagen_placeholder, title, description, imageBase64)
+                ) ?: Review(0, title, description, imageBase64)
 
                 onSave(newReview)
                 dismiss()
