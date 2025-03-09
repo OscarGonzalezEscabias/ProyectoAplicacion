@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.proyectoaplicacion.R
 import com.example.proyectoaplicacion.domain.model.Review
 
@@ -48,13 +49,11 @@ class POJOAdapter(
             descriptionTextView.text = review.description
 
             if (review.image != null) {
-                val imageName = review.image.replace(".jpg", "") // Elimina la extensión .jpg
-                val imageResId = itemView.context.resources.getIdentifier(imageName, "drawable", itemView.context.packageName)
-                if (imageResId != 0) {
-                    imageView.setImageResource(imageResId)
-                } else {
-                    imageView.setImageResource(R.drawable.imagen_placeholder)
-                }
+                Glide.with(itemView.context)
+                    .load("http://192.168.1.146:8080/images/${review.image}")
+                    .placeholder(R.drawable.imagen_placeholder)
+                    .error(R.drawable.imagen_placeholder)
+                    .into(imageView)
             } else {
                 imageView.setImageResource(R.drawable.imagen_placeholder)
             }

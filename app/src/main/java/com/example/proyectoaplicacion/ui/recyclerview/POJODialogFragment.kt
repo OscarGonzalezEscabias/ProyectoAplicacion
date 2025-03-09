@@ -21,6 +21,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import com.bumptech.glide.Glide
 import com.example.proyectoaplicacion.R
 import com.example.proyectoaplicacion.databinding.FragmentPojoDialogBinding
 import com.example.proyectoaplicacion.domain.model.Review
@@ -54,13 +55,12 @@ class POJODialogFragment(
             binding.descriptionEditText.setText(it.description)
             binding.imageView.setImageResource(R.drawable.imagen_placeholder)
             if (it.image != null) {
-                val imageName = it.image.replace(".jpg", "")
-                val imageResId = binding.imageView.context.resources.getIdentifier(imageName, "drawable", binding.imageView.context.packageName)
-                if (imageResId != 0) {
-                    binding.imageView.setImageResource(imageResId)
-                } else {
-                    binding.imageView.setImageResource(R.drawable.imagen_placeholder)
-                }
+                Glide.with(binding.imageView.context)
+                    .load(it.image)
+                    .placeholder(R.drawable.imagen_placeholder)
+                    .into(binding.imageView)
+            } else {
+                binding.imageView.setImageResource(R.drawable.imagen_placeholder)
             }
         }
 
@@ -237,5 +237,7 @@ class POJODialogFragment(
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
         val byteArray = byteArrayOutputStream.toByteArray()
         return Base64.encodeToString(byteArray, Base64.DEFAULT)
+            .replace("\n", "")
+            .replace(" ", "")
     }
 }

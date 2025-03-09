@@ -13,7 +13,7 @@ class RetrofitClient @Inject constructor(
     private val sharedPreferencesHelper: SharedPreferencesHelper
 ) {
 
-    private val BASE_URL = "http://172.21.16.1:8080"
+    private val BASE_URL = "http://192.168.1.146:8080"
 
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(HttpLoggingInterceptor().apply {
